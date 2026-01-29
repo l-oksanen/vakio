@@ -1,16 +1,27 @@
 repos:
-  - repo: https://github.com/kynan/nbstripout
-    rev: 0.9.0
+  - repo: local
     hooks:
       - id: nbstripout
-        args: [--keep-output, --extra-keys, "metadata.kernelspec metadata.language_info.version"]
+        name: nbstripout (poetry)
+        entry: poetry run nbstripout
+        language: system
         types: [jupyter]
-  - repo: https://github.com/psf/black
-    rev: 26.1.0
-    hooks:
-      - id: black
-        language_version: python3
-  - repo: https://github.com/pycqa/isort
-    rev: 7.0.0
-    hooks:
+        args: [--keep-output, --extra-keys, "metadata.kernelspec metadata.language_info.version"]
+
+      - id: ruff
+        name: ruff (poetry)
+        entry: poetry run ruff check --fix
+        language: system
+        types: [python]
+
       - id: isort
+        name: isort (poetry)
+        entry: poetry run isort
+        language: system
+        types: [python]
+
+      - id: black
+        name: black (poetry)
+        entry: poetry run black
+        language: system
+        types: [python]
