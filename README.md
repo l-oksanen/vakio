@@ -5,7 +5,7 @@ Vakio is a light-background syntax color palette that:
 * is parametrized in the 
 [Oklch color space](https://en.wikipedia.org/wiki/Oklab_color_space) 
 using two lightness levels at which chroma is maximized, 
-see [Palette design](info.ipynb)
+see [Palette design](design.ipynb)
 
 * can be injected into 
 [Catppuccin](https://catppuccin.com/) templates, 
