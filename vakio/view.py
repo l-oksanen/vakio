@@ -7,7 +7,7 @@ from matplotlib import pyplot as plt
 from matplotlib.colors import XKCD_COLORS, to_rgb
 
 from .alg import dist_perceptual, srgb_to_oklch
-from .metadata import *
+from .metadata import COLORS, semantic_mapping_colors, semantics_color
 
 
 def hex_to_oklch(h):
@@ -30,65 +30,126 @@ def hex_to_xkcd_name(h):
     return name[5:]
 
 
-def hexes(hexes, lift={}, labels=None, colored_labels=True):
+def mosaic_layout(bottom_keys, top_keys=None, pad_left=True):
+    """
+    Return a centered two-row mosaic layout.
+
+    Intended for use with matplotlib.pyplot.subplot_mosaic.
+
+    If top_keys is omitted, only the bottom row is used.
+    Any leftover padding is placed on the left when pad_left is True,
+    otherwise on the right.
+    """
+    spacer = "."
+    span = 2
+
+    if top_keys is None:
+        return [[k for k in bottom_keys for _ in range(span)]]
+
+    t, b = len(top_keys), len(bottom_keys)
+    if t < b:
+        flipped = False
+    else:
+        flipped = True
+        t, b = b, t
+        bottom_keys, top_keys = top_keys, bottom_keys
+
+    gaps = t - 1
+    extra = b * span - t * span
+
+    bottom_row = []
+    for k in bottom_keys:
+        bottom_row += [k] * span
+
+    top_row = []
+    if extra >= gaps and not (t == 2 and extra == 2):
+        for k in top_keys:
+            top_row += [k] * span
+            top_row.append(spacer)
+        top_row = top_row[:-1]
+        remaining = extra - gaps
+    else:
+        for k in top_keys:
+            top_row += [k] * span
+        remaining = extra
+
+    left = remaining // 2
+    right = remaining - left
+    if pad_left and left < right:
+        left, right = right, left
+    top_row = [spacer] * left + top_row + [spacer] * right
+
+    if flipped:
+        return [bottom_row, top_row]
+    else:
+        return [top_row, bottom_row]
+
+
+def hexes(hexes, top_hexes=None, labels=None, colored_labels=True):
     """
     Plot hex color values as a table with one or two rows.
-
-    Key-value pairs in lift cause hexes[key] to be shown at position
-    value on the second row.
 
     If no labels are provided, XKCD color names as used.
 
     Setting colored_labels to False prints labels in black instead of
     their corresponding color.
     """
+    scaling = 6  # Ratio of size of squares vs size of text
+    ws_aspect = 0.9  # Ratio of whitespace between cols vs rows
+    padding = 0.15  # Padding of labels
+
+    n = len(hexes)
+    keys_bottom = set(range(n))
+    if top_hexes is not None:
+        keys_top = set(range(n, n + len(top_hexes)))
+        hexes = list(hexes) + list(top_hexes)
+    else:
+        keys_top = None
+
     if labels is None:
         labels = [hex_to_xkcd_name(h) for h in hexes]
-    two_rows = len(lift) > 0
-    if two_rows:
-        n_cols = max(len(hexes) - len(lift), max(lift.keys()))
-        _, axs = plt.subplots(
-            2,
-            n_cols,
-            figsize=(n_cols, 2),
-            gridspec_kw={"hspace": 0.05},
-        )
-    else:
-        _, axs = plt.subplots(1, len(hexes), figsize=(len(hexes), 1))
 
-    shift = 0
+    layout = mosaic_layout(keys_bottom, keys_top)
+    nrows = len(layout)
+    ncols = len(layout[0])
+
+    fig, axs = plt.subplot_mosaic(layout)
+    fig.set_size_inches(
+        scaling, 2 * ws_aspect * scaling * nrows / ncols
+    )
     for i in range(len(hexes)):
-        rot = -45
-        posy = 1.1
-        if two_rows:
-            if i in lift:
-                ax = axs[0, lift[i]]
-                shift += 1
-                rot = 45
-                posy = -0.65
-            else:
-                ax = axs[1, i - shift]
-        elif len(hexes) > 1:
-            ax = axs[i]
-        else:
-            ax = axs
+        ax = axs[i]
         h = hexes[i]
+        label = labels[i]
         c = h if colored_labels else "black"
         ax.imshow(np.dstack(to_rgb(h)))
-        ax.text(
-            -0.1,
-            posy,
-            labels[i],
-            horizontalalignment="left",
-            rotation=rot,
-            rotation_mode="anchor",
-            color=c,
-        )
-    if len(hexes) > 1:
-        for ax in axs.flat:
-            ax.axis("off")
-    else:
-        axs.axis("off")
+        if i in keys_bottom:
+            ax.text(
+                0.5,
+                -padding,
+                label,
+                color=c,
+                transform=ax.transAxes,
+                rotation=-45,
+                ha="left",
+                va="top",
+                clip_on=False,
+                rotation_mode="anchor",
+            )
+        else:
+            ax.text(
+                0.5,
+                1 + padding,
+                label,
+                color=c,
+                transform=ax.transAxes,
+                rotation=45,
+                ha="left",
+                va="bottom",
+                clip_on=False,
+                rotation_mode="anchor",
+            )
+        ax.axis("off")
 
 
 def palette(palette):
