@@ -80,7 +80,7 @@ def find_peaks(L, left_h=100, *, _params=None):
                 [L] * len(cs),
                 cs[peaks],
                 [np.mod(h, 360) for h in hs[peaks]],
-                strict=True,
+                strict=False,
             )
         ),
         properties,
