@@ -94,7 +94,7 @@ def hexes(hexes, top_hexes=None, labels=None, colored_labels=True):
     Setting colored_labels to False prints labels in black instead of
     their corresponding color.
     """
-    scaling = 6  # Ratio of size of squares vs size of text
+    scaling = 0.6  # Ratio of size of squares vs size of text
     ws_aspect = 0.9  # Ratio of whitespace between cols vs rows
     padding = 0.15  # Padding of labels
 
@@ -115,7 +115,7 @@ def hexes(hexes, top_hexes=None, labels=None, colored_labels=True):
 
     fig, axs = plt.subplot_mosaic(layout)
     fig.set_size_inches(
-        scaling, 2 * ws_aspect * scaling * nrows / ncols
+        scaling * ncols, 2 * ws_aspect * scaling * nrows
     )
     for i in range(len(hexes)):
         ax = axs[i]

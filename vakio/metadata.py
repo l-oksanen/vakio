@@ -1,38 +1,39 @@
-DARK_COLORS = list(range(0, 6))
-BRIGHT_COLORS = list(range(6, 12))
-EXTRA_COLORS = list(range(24, 26))
+BLACK = 0
+DARK_GREYS = list(range(BLACK + 1, BLACK + 4))
+GREY = DARK_GREYS[-1]
+SUBTLE_GREY = GREY + 1
+BRIGHT_GREYS = list(range(SUBTLE_GREY, SUBTLE_GREY + 5))
+CRUST = BRIGHT_GREYS[-1] + 1
+MANTLE = CRUST + 1
+WHITE = MANTLE + 1
 
-BLACK = 12
-GREY = 15
-SUBTLE_GREY = 16
-DARK_GREYS = list(range(13, 15))
-BRIGHT_GREYS = list(range(16, 21))
-CRUST = 21
-MANTLE = 22
-WHITE = 23
+DARK_COLORS = list(range(WHITE + 1, WHITE + 6))
+BRIGHT_COLORS = list(range(DARK_COLORS[-1] + 1, DARK_COLORS[-1] + 7))
+MANUAL_COLORS = list(
+    range(BRIGHT_COLORS[-1] + 1, BRIGHT_COLORS[-1] + 3)
+)
 
-GREYS = list(range(12, 24))
-COLORS = DARK_COLORS + BRIGHT_COLORS + EXTRA_COLORS
+GREYS = list(range(BLACK, WHITE + 1))
+MANUAL_GREYS = [BLACK, CRUST, MANTLE, WHITE]
+COLORS = DARK_COLORS + BRIGHT_COLORS + MANUAL_COLORS
 SEMANTIC = [BLACK, GREY, SUBTLE_GREY] + COLORS
 
 semantic_mapping_colors = {
     "text": BLACK,
-    "params": DARK_COLORS[1],
-    "functions": DARK_COLORS[3],
-    "operators": BRIGHT_COLORS[3],
-    "keywords": DARK_COLORS[4],
-    "classes": DARK_COLORS[5],
+    "params": DARK_COLORS[0],
+    "functions": DARK_COLORS[2],
+    "operators": BRIGHT_COLORS[2],
+    "keywords": DARK_COLORS[3],
+    "classes": DARK_COLORS[4],
     "subtle": SUBTLE_GREY,
     "comments": GREY,
     "strings": BRIGHT_COLORS[0],
-    "escapes": BRIGHT_COLORS[2],
-    "constants": BRIGHT_COLORS[4],
+    "escapes": BRIGHT_COLORS[1],
+    "constants": BRIGHT_COLORS[3],
     "errors": BRIGHT_COLORS[5],
-    "cursor": EXTRA_COLORS[0],
-    "extra": EXTRA_COLORS[1],
-    "hover": BRIGHT_COLORS[1],
-    "visited": DARK_COLORS[2],
-    "dark": DARK_COLORS[0],
+    "cursor": MANUAL_COLORS[0],
+    "extra": MANUAL_COLORS[1],
+    "dark": DARK_COLORS[1],
 }
 
 semantic_mapping_greys = {
@@ -52,7 +53,7 @@ semantic_mapping = semantic_mapping_colors | semantic_mapping_greys
 semantics_color = {
     "text": "Text",
     "functions": (
-        "Links, URLs, Tags, Methods, Functions, Properties"
+        "Methods, Functions, Properties, " "Links, URLs, Tags"
     ),
     "classes": (
         "Warnings, Classes, Interfaces, "
@@ -60,16 +61,14 @@ semantics_color = {
         "Enums, Types, Attributes"
     ),
     "params": "Parameters",
-    "keywords": "Keywords",
+    "keywords": "Keywords, Followed Links, Active Line Number",
     "constants": "Constants, Numbers, Warnings",
-    "operators": "Operators, Enum Variants",
+    "operators": "Operators, Enum Variants, On Hover Links",
     "errors": "Errors, Symbols, Atoms, Builtins",
     "subtle": "Subtle, Line Numbers",
     "comments": "Comments, Braces, Delimiters",
     "strings": "Success, Strings",
     "escapes": "Escape Sequences, Regex",
-    "hover": "On Hover Links",
-    "visited": "Followed Links, Active Line Number",
     "cursor": "Cursor",
     "dark": "N/A (LaTeX Math Mode)",
     "extra": "N/A (Rainbow Highlights)",
@@ -100,8 +99,8 @@ catppuccin_translation = {
     "teal": "operators",
     "rosewater": "cursor",
     "overlay1": "subtle",
-    "sky": "hover",
-    "lavender": "visited",
+    "sky": "operators",
+    "lavender": "keywords",
     "flamingo": "dark",
     "sapphire": "extra",
     "text": "text",
