@@ -1,0 +1,18 @@
+{
+    // To find names of scopes, use Command Palette to run
+    // Developer: Inspect Editor Tokens and Scopes
+    "textMateRules": [
+        {
+            "scope": "variable.parameter.definition.label.latex",
+            "settings": {
+                "foreground": "$errors"
+            }              
+        },
+        {
+            "scope": "constant.other.reference.label.latex",
+            "settings": {
+                "foreground": "$classes"
+            }                
+        }
+    ]
+}
