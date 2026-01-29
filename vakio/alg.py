@@ -5,48 +5,58 @@ from scipy.signal import find_peaks as signal_find_peaks
 from scipy.signal import savgol_filter
 
 
-def generate(L, sky_shift=0, ocean_shift=0):
+def generate(L, n_magenta=1, n_cyan=1, shifts=None):
     """
     Return colors on the boundary of the sRGB space at lightness L.
 
     L must be between 0.3 and 0.7.
 
-    The selected colors are:
+    The colors are:
     * Green, blue and red peak values
-    * Purple at the hue midpoint between blue and red
-    * Ocean at the hue midpoint between green and blue
-    * Dull blue, equidistant to ocean and blue
+    * Magentas between blue and red
+    * Cyans between green and blue
 
-    Blue and ocean can be shifted toward green using sky_shift and
-    ocean_shift. A value of 1 sets them equal to green.
+    Returns `3 + n_magenta + n_cyan` colors in total. An optional
+    list of shifts of the same length adjusts each color's position:
+    a value of 0 leaves the color unchanged, values in (-1, 0) shift
+    it toward the left neighbor, and values in (0, 1) shift it toward
+    the right neighbor.
     """
     if L < 0.3 or L > 0.7:
         raise ValueError("L must be between 0.3 and 0.7")
 
     peaks, properties = find_peaks(L)
     if len(peaks) == 3:
-        green, sky, red = peaks
+        green, blue, red = peaks
     elif len(peaks) == 4:
-        green, sky, _, red = peaks
+        green, blue, _, red = peaks
     else:
         raise _PeakDetectionError(
             L, peaks, properties, _PeakDetectionParams()
         )
 
-    blue = color_on_bd(
-        L, avg_hue(green[2], sky[2], bias=1 - 2 * sky_shift)
-    )
     colors = [green, blue, red]
+    colors += linspace_ch(blue, red, n_magenta + 2)[1:-1]
+    colors += linspace_ch(blue, green, n_cyan + 2)[1:-1]
+    colors = hue_sorted(colors, green[2])
 
-    colors.append(color_on_bd(L, avg_hue(blue[2], red[2])))
-
-    ocean_h = avg_hue(sky[2], green[2], bias=ocean_shift)
-    ocean = color_on_bd(L, ocean_h)
-    colors.append(ocean)
-    r = dist_in_ch(ocean, blue) / 2
-    colors.append(move_along_bd(blue, r, avg_hue(ocean_h, blue[2])))
-
-    return hue_sorted(colors, green[2])
+    if shifts is not None:
+        n = len(colors)
+        colors_ = []
+        for i in range(n):
+            s = shifts[i]
+            color = (
+                colors[np.mod(i - 1, n)]
+                if s < 0
+                else colors[np.mod(i + 1, n)]
+            )
+            bias = 1 - 2 * abs(s)
+            w, w_ = (1 - bias) / 2, (1 + bias) / 2
+            colors_.append(
+                avg_ch(color, colors[i], weight1=w, weight2=w_)
+            )
+        colors = colors_
+    return colors
 
 
 def find_peaks(L, left_h=100, *, _params=None):
@@ -85,29 +95,6 @@ def find_peaks(L, left_h=100, *, _params=None):
         ),
         properties,
     )
-
-
-def color_on_bd(L, h):
-    """
-    Return the color at sRGB boundary for given lightness and hue.
-    """
-    return (L, max_c(L, h), np.mod(h, 360))
-
-
-def move_along_bd(origin, distance, init_h):
-    """
-    Return color at sRGB boundary at given distance from origin.
-
-    Color is found using the bisection method and init_h is used as
-    an initial guess for hue.
-    """
-    L, _, h = origin
-    h_ = bisect(
-        h,
-        init_h,
-        lambda h_: dist_in_ch(color_on_bd(L, h_), origin) - distance,
-    )
-    return color_on_bd(L, h_)
 
 
 def hue_sorted(colors, h_start=0):
@@ -169,21 +156,67 @@ def diff_hue(h1, h2):
     return np.mod(h1 - h2 + 180, 360) - 180
 
 
-def avg_hue(h1, h2, bias=0):
+def linspace_hue(h1, h2, n):
     """
-    Compute the biased average of hues.
+    Return evenly spaced hue values.
+    """
+    dh = diff_hue(h2, h1)
+    r1, dr = np.radians(h1), np.radians(dh)
+    drs = np.linspace(0, dr, n)
+    return np.degrees(np.arctan2(np.sin(r1 + drs), np.cos(r1 + drs)))
 
-    The bias should be between -1 and 1.
+
+def avg_hue(h1, h2, weight1=1, weight2=1):
     """
-    bias = max(-1, min(1, bias))
-    w1, w2 = (1 - bias) / 2, (1 + bias) / 2
+    Compute the weighted average of hues.
+    """
     a1, a2 = np.radians(h1), np.radians(h2)
-    return np.degrees(
-        np.arctan2(
-            w1 * np.sin(a1) + w2 * np.sin(a2),
-            w1 * np.cos(a1) + w2 * np.cos(a2),
-        )
+    return np.mod(
+        np.degrees(
+            np.arctan2(
+                weight1 * np.sin(a1) + weight2 * np.sin(a2),
+                weight1 * np.cos(a1) + weight2 * np.cos(a2),
+            ),
+        ),
+        360,
     )
+
+
+def linspace_ch(color1, color2, n):
+    """
+    Return evenly spaced colors in the chroma-hue subspace.
+
+    Lightness is the same for all colors and is that of color1.
+    """
+    L = color1[0]
+    cs = np.linspace(color1[1], color2[1], n)
+    hs = linspace_hue(color1[2], color2[2], n)
+    return [
+        (L, min(c, max_c(L, h)), h)
+        for c, h in zip(cs, hs, strict=True)
+    ]
+
+
+def avg_ch(color1, color2, weight1=1, weight2=1):
+    """
+    Compute the weighted average of colors in the chroma-hue subspace.
+
+    Lightness is that of color1.
+    """
+    L, c, h = color1
+    _, c_, h_ = color2
+    return clamp(
+        L,
+        weight1 * c + weight2 * c_,
+        avg_hue(h, h_, weight1=weight1, weight2=weight2),
+    )
+
+
+def clamp(L, c, h):
+    """
+    Return color with chroma clamped to the sRGB boundary.
+    """
+    return (L, min(c, max_c(L, h)), np.mod(h, 360))
 
 
 def max_c(L, h, margin=0):
