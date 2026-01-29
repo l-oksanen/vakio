@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from pprint import pformat
 
 import numpy as np
 from scipy.signal import find_peaks as signal_find_peaks
@@ -22,7 +21,7 @@ def generate(L, sky_shift=0, ocean_shift=0):
     ocean_shift. A value of 1 sets them equal to green.
     """
     if L < 0.3 or L > 0.7:
-        raise ValueError(f"L must be between 0.3 and 0.7")
+        raise ValueError("L must be between 0.3 and 0.7")
 
     peaks, properties = find_peaks(L)
     if len(peaks) == 3:
@@ -81,6 +80,7 @@ def find_peaks(L, left_h=100, *, _params=None):
                 [L] * len(cs),
                 cs[peaks],
                 [np.mod(h, 360) for h in hs[peaks]],
+                strict=True,
             )
         ),
         properties,

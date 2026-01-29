@@ -11,7 +11,7 @@ def create_palette(
     bright_L=0.55,
     bright_sky_shift=0,
     bright_ocean_shift=0,
-    hex_extra_colors=["#e17701", "#fac205"],
+    hex_extra_colors=("#e17701", "#fac205"),
     hex_greys=None,
 ):
     """
@@ -35,7 +35,7 @@ def create_palette(
         + generate(bright_L, bright_sky_shift, bright_ocean_shift)
     ]
     return np.concatenate(
-        (np.array(colors), hex_greys, hex_extra_colors)
+        (np.array(colors), hex_greys, list(hex_extra_colors))
     )
 
 
