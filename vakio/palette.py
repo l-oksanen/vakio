@@ -9,7 +9,7 @@ def create_palette(
     bright_L=0.55,
     dark_shifts=None,
     bright_shifts=None,
-    hex_extra_colors=("#e17701", "#fac205"),
+    hex_extra_colors=("#db7201", "#dca401", "#00ae0d"),
     hex_greys=None,
 ):
     """

@@ -10,13 +10,70 @@ WHITE = MANTLE + 1
 DARK_COLORS = list(range(WHITE + 1, WHITE + 6))
 BRIGHT_COLORS = list(range(DARK_COLORS[-1] + 1, DARK_COLORS[-1] + 7))
 MANUAL_COLORS = list(
-    range(BRIGHT_COLORS[-1] + 1, BRIGHT_COLORS[-1] + 3)
+    range(BRIGHT_COLORS[-1] + 1, BRIGHT_COLORS[-1] + 4)
 )
 
 GREYS = list(range(BLACK, WHITE + 1))
 MANUAL_GREYS = [BLACK, CRUST, MANTLE, WHITE]
 COLORS = DARK_COLORS + BRIGHT_COLORS + MANUAL_COLORS
 SEMANTIC = [BLACK, GREY, SUBTLE_GREY] + COLORS
+
+
+ANSI = [
+    BLACK,
+    DARK_COLORS[4],
+    BRIGHT_COLORS[0],
+    MANUAL_COLORS[0],
+    DARK_COLORS[2],
+    DARK_COLORS[3],
+    DARK_COLORS[1],
+    SUBTLE_GREY,
+    GREY,
+    BRIGHT_COLORS[5],
+    MANUAL_COLORS[2],
+    MANUAL_COLORS[1],
+    BRIGHT_COLORS[2],
+    BRIGHT_COLORS[4],
+    BRIGHT_COLORS[1],
+    WHITE,
+]
+ansi_names = [
+    "Black",
+    "Red",
+    "Green",
+    "Yellow",
+    "Blue",
+    "Magenta",
+    "Cyan",
+    "White",
+    "Bright Black",
+    "Bright Red",
+    "Bright Green",
+    "Bright Yellow",
+    "Bright Blue",
+    "Bright Magenta",
+    "Bright Cyan",
+    "Bright White",
+]
+
+
+RAINBOW = [
+    BRIGHT_COLORS[5],
+    MANUAL_COLORS[0],
+    MANUAL_COLORS[1],
+    MANUAL_COLORS[2],
+    BRIGHT_COLORS[2],
+    BRIGHT_COLORS[3],
+]
+rainbow_names = [
+    "Red",
+    "Orange",
+    "Yellow",
+    "Green",
+    "Blue",
+    "Violet",
+]
+
 
 semantic_mapping_colors = {
     "text": BLACK,
@@ -30,10 +87,12 @@ semantic_mapping_colors = {
     "strings": BRIGHT_COLORS[0],
     "escapes": BRIGHT_COLORS[1],
     "constants": BRIGHT_COLORS[3],
+    "cursor": BRIGHT_COLORS[4],
     "errors": BRIGHT_COLORS[5],
-    "cursor": MANUAL_COLORS[0],
-    "extra": MANUAL_COLORS[1],
-    "dark": DARK_COLORS[1],
+    "rainbow1": MANUAL_COLORS[0],
+    "rainbow2": MANUAL_COLORS[1],
+    "rainbow3": MANUAL_COLORS[2],
+    "ansi6": DARK_COLORS[1],
 }
 
 semantic_mapping_greys = {
@@ -49,6 +108,7 @@ semantic_mapping_greys = {
 }
 
 semantic_mapping = semantic_mapping_colors | semantic_mapping_greys
+
 
 semantics_color = {
     "text": "Text",
@@ -70,8 +130,10 @@ semantics_color = {
     "strings": "Success, Strings",
     "escapes": "Escape Sequences, Regex",
     "cursor": "Cursor",
-    "dark": "N/A (LaTeX Math Mode)",
-    "extra": "N/A (Rainbow Highlights)",
+    "rainbow1": "",
+    "rainbow2": "",
+    "rainbow3": "",
+    "ansi6": "",
 }
 
 semantics_grey = {
@@ -85,6 +147,7 @@ semantics_grey = {
     "subtext0": "Sub-Headlines, Labels",
     "subtext1": "Sub-Headlines, Labels",
 }
+
 
 catppuccin_translation = {
     "mauve": "keywords",
@@ -101,8 +164,8 @@ catppuccin_translation = {
     "overlay1": "subtle",
     "sky": "operators",
     "lavender": "keywords",
-    "flamingo": "dark",
-    "sapphire": "extra",
+    "flamingo": "ansi6",
+    "sapphire": "rainbow1",
     "text": "text",
     "base": "base",
     "mantle": "mantle",
@@ -115,32 +178,6 @@ catppuccin_translation = {
     "subtext1": "subtext1",
 }
 
-github_base24 = {
-    "base00": "#eaeef2",
-    "base01": "#d0d7de",
-    "base02": "#afb8c1",
-    "base03": "#8c959f",
-    "base04": "#6e7781",
-    "base05": "#424a53",
-    "base06": "#32383f",
-    "base07": "#1f2328",
-    "base08": "#fa4549",
-    "base09": "#e16f24",
-    "base0A": "#bf8700",
-    "base0B": "#2da44e",
-    "base0C": "#339D9B",
-    "base0D": "#218bff",
-    "base0E": "#a475f9",
-    "base0F": "#4d2d00",
-    "base10": "#1f2328",
-    "base11": "#000000",
-    "base12": "#ff8182",
-    "base13": "#d4a72c",
-    "base14": "#4ac26b",
-    "base15": "#49BCB7",
-    "base16": "#54aeff",
-    "base17": "#c297ff",
-}
 
 base24_dark_colors = {
     "base08",

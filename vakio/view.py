@@ -7,7 +7,16 @@ from matplotlib import pyplot as plt
 from matplotlib.colors import XKCD_COLORS, to_rgb
 
 from .alg import dist_perceptual, srgb_to_oklch
-from .metadata import COLORS, semantic_mapping_colors, semantics_color
+from .metadata import (
+    ANSI,
+    COLORS,
+    RAINBOW,
+    ansi_names,
+    catppuccin_translation,
+    rainbow_names,
+    semantic_mapping_colors,
+    semantics_color,
+)
 
 
 def hex_to_oklch(h):
@@ -157,7 +166,18 @@ def palette(palette):
     Display palette as a HTML table.
     """
     html = "<table>"
-    for s, ix in semantic_mapping_colors.items():
+    ansi_inv = {v: i for i, v in enumerate(ANSI)}
+    rainbow_inv = {v: i for i, v in enumerate(RAINBOW)}
+    for key, ix in semantic_mapping_colors.items():
+        desc = semantics_color[key]
+        if key in catppuccin_translation.values():
+            desc = "🐱" + desc
+        if ix in RAINBOW:
+            rix = rainbow_inv[ix]
+            desc = f"🌈{rix} ({rainbow_names[rix]}) " + desc
+        if ix in ansi_inv:
+            aix = ansi_inv[ix]
+            desc = f"#️⃣{aix} ({ansi_names[aix]}) " + desc
         h = palette[ix]
         r, g, b = to_rgb(h)
         name = hex_to_xkcd_name(h)
@@ -171,11 +191,11 @@ def palette(palette):
     text-align: left;
 '>
 <td>■</td>
-<td>{s}</td>
+<td>{key}</td>
 <td>{h}</td>
 <td>{100*L:.0f}</td>
 <td>{name}</td>
-<td>{semantics_color[s]}</td>
+<td>{desc}</td>
 </tr>"""
     display(HTML(html + "</table>"))
 
@@ -282,3 +302,29 @@ def _hex_to_html(h, draw_border=False):
     color: rgb({255*r}, {255*g}, {255*b}); 
 '>■ {h} {100*L:.0f} {name}</td>
 """
+
+
+def hex(h):
+    """
+    Render hex as HTML.
+    """
+    display(HTML("<table>" + _hex_to_html(h) + "</table>"))
+
+
+def cycle_colors(text, colors):
+    """
+    Render as HTML where consecutive characters have different colors.
+
+    Cycles through colors given as hex values.
+    """
+    spans = []
+    for i, ch in enumerate(text):
+        color = colors[np.mod(i, len(colors))]
+        spans.append(f"<span style='color:{color}'>{ch}</span>")
+    display(
+        HTML(
+            "<div style='font-family: monospace;'>"
+            + "".join(spans)
+            + "</div>"
+        )
+    )
