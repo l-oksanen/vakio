@@ -287,7 +287,7 @@ def closest(hexes, palette):
 def _hex_to_html(h, draw_border=False):
     r, g, b = to_rgb(h)
     name = hex_to_xkcd_name(h)
-    L = hex_to_oklch(h)[0]
+    L, c, _ = hex_to_oklch(h)
     border_style = (
         "border-bottom: 2px solid #deddda;" if draw_border else ""
     )
@@ -300,7 +300,7 @@ def _hex_to_html(h, draw_border=False):
 <td style='
     font-family: monospace; 
     color: rgb({255*r}, {255*g}, {255*b}); 
-'>■ {h} {100*L:.0f} {name}</td>
+'>■ {h} L={100*L:.0f} c={c:.0f} {name}</td>
 """
 
 
