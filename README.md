@@ -11,4 +11,4 @@ see [Palette design](design.ipynb)
 [Catppuccin](https://catppuccin.com/) templates, 
 see [Usage](usage.ipynb)
 
-* provides higher contrast between text and background than many popular light-background themes, see [Comparison](comparison.ipynb)
+* provides reasonable approximations of many widely used colors, see [Comparison](comparison.ipynb)
