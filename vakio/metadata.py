@@ -177,37 +177,3 @@ catppuccin_translation = {
     "subtext0": "subtext0",
     "subtext1": "subtext1",
 }
-
-
-base24_dark_colors = {
-    "base08",
-    "base09",
-    "base0A",
-    "base0B",
-    "base0C",
-    "base0D",
-    "base0E",
-    "base0F",
-}
-
-base24_bright_colors = {
-    "base12",
-    "base13",
-    "base14",
-    "base15",
-    "base16",
-    "base17",
-}
-
-base24_grayscale = {
-    "base00",
-    "base01",
-    "base02",
-    "base03",
-    "base04",
-    "base05",
-    "base06",
-    "base07",
-    "base10",
-    "base11",
-}
