@@ -3,6 +3,12 @@
     // Developer: Inspect Editor Tokens and Scopes
     "textMateRules": [
         {
+            "scope": "keyword.operator",
+            "settings": {
+                "foreground": "$operators"
+            }
+        },
+        {
             "scope": "entity.name.namespace",
             "settings": {
                 "foreground": "$labels"
