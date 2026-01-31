@@ -184,8 +184,6 @@ def palette(palette, show_ansi_name=True, show_rainbow_name=True):
             desc = f"#️⃣{aix} " + desc
         h = palette[ix]
         r, g, b = to_rgb(h)
-        name = hex_to_xkcd_name(h)
-        L = hex_to_oklch(h)[0]
         html += f"""
 <tr style='
     background: #fff; 
@@ -196,9 +194,7 @@ def palette(palette, show_ansi_name=True, show_rainbow_name=True):
 '>
 <td>■</td>
 <td>{key}</td>
-<td>{h}</td>
-<td>{100*L:.0f}</td>
-<td>{name}</td>
+<td style='white-space: pre;'>{hex_to_str(h)}</td>
 <td>{desc}</td>
 </tr>"""
     display(HTML(html + "</table>"))
@@ -288,10 +284,19 @@ def closest(hexes, palette):
     display(HTML(html))
 
 
+def hex_to_str(h):
+    """
+    Return hex as string.
+
+    String consists of hex value, lightness, chroma and XKCD name.
+    """
+    L, c, _ = hex_to_oklch(h)
+    name = hex_to_xkcd_name(h)
+    return f"{h} {100*L:3.0f} {c:3.0f} {name}"
+
+
 def _hex_to_html(h, draw_border=False):
     r, g, b = to_rgb(h)
-    name = hex_to_xkcd_name(h)
-    L, c, _ = hex_to_oklch(h)
     border_style = (
         "border-bottom: 2px solid #deddda;" if draw_border else ""
     )
@@ -304,7 +309,7 @@ def _hex_to_html(h, draw_border=False):
 <td style='
     font-family: monospace; 
     color: rgb({255*r}, {255*g}, {255*b}); 
-'>■ {h} L={100*L:.0f} c={c:.0f} {name}</td>
+'>■ {hex_to_str(h)}</td>
 """
 
 
