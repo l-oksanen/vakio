@@ -3,16 +3,10 @@
     // Developer: Inspect Editor Tokens and Scopes
     "textMateRules": [
         {
-            "scope": "variable.parameter.definition.label.latex",
+            "scope": "entity.name.namespace",
             "settings": {
-                "foreground": "$errors"
-            }              
-        },
-        {
-            "scope": "constant.other.reference.label.latex",
-            "settings": {
-                "foreground": "$classes"
-            }                
+                "foreground": "$labels"
+            }
         }
     ]
 }
