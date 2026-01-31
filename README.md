@@ -1,5 +1,11 @@
 # Vakio palette
 
+<p align="center">
+<img src="examples/screenshot_bisect.png" alt="Screenshot">
+<br>
+<sub>Python syntax highlighting in VS Code with rainbow brackets</sub>
+</p>
+
 Vakio is a light-background syntax color palette that:
 
 * is parametrized in the 
