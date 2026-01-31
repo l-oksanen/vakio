@@ -1,9 +1,10 @@
 BLACK = 0
-DARK_GREYS = list(range(BLACK + 1, BLACK + 4))
-GREY = DARK_GREYS[-1]
-SUBTLE_GREY = GREY + 1
-BRIGHT_GREYS = list(range(SUBTLE_GREY, SUBTLE_GREY + 5))
-CRUST = BRIGHT_GREYS[-1] + 1
+ALMOST_BLACK = 1
+DARK_GREY = 2
+BRIGHT_GREY = 3
+SUBTLE_GREY = 4
+UI_LIGHT_GREYS = list(range(SUBTLE_GREY + 1, SUBTLE_GREY + 5))
+CRUST = UI_LIGHT_GREYS[-1] + 1
 MANTLE = CRUST + 1
 WHITE = MANTLE + 1
 
@@ -12,11 +13,14 @@ BRIGHT_COLORS = list(range(DARK_COLORS[-1] + 1, DARK_COLORS[-1] + 7))
 MANUAL_COLORS = list(
     range(BRIGHT_COLORS[-1] + 1, BRIGHT_COLORS[-1] + 4)
 )
+TEXT_COLORS = DARK_COLORS + BRIGHT_COLORS + MANUAL_COLORS
 
 GREYS = list(range(BLACK, WHITE + 1))
 MANUAL_GREYS = [BLACK, CRUST, MANTLE, WHITE]
-COLORS = DARK_COLORS + BRIGHT_COLORS + MANUAL_COLORS
-SEMANTIC = [BLACK, GREY, SUBTLE_GREY] + COLORS
+UI_GREYS = [ALMOST_BLACK] + UI_LIGHT_GREYS + MANUAL_GREYS[1:]
+TEXT_GREYS = [BLACK, DARK_GREY, BRIGHT_GREY, SUBTLE_GREY]
+
+TEXT = TEXT_GREYS + TEXT_COLORS
 
 
 ANSI = [
@@ -28,7 +32,7 @@ ANSI = [
     DARK_COLORS[3],
     DARK_COLORS[1],
     SUBTLE_GREY,
-    GREY,
+    BRIGHT_GREY,
     BRIGHT_COLORS[5],
     MANUAL_COLORS[2],
     MANUAL_COLORS[1],
@@ -75,15 +79,16 @@ rainbow_names = [
 ]
 
 
-semantic_mapping_colors = {
+semantic_mapping_text = {
     "text": BLACK,
+    "labels": DARK_GREY,
     "params": DARK_COLORS[0],
     "functions": DARK_COLORS[2],
     "operators": BRIGHT_COLORS[2],
     "keywords": DARK_COLORS[3],
     "classes": DARK_COLORS[4],
     "subtle": SUBTLE_GREY,
-    "comments": GREY,
+    "comments": BRIGHT_GREY,
     "strings": BRIGHT_COLORS[0],
     "escapes": BRIGHT_COLORS[1],
     "constants": BRIGHT_COLORS[3],
@@ -95,23 +100,23 @@ semantic_mapping_colors = {
     "ansi6": DARK_COLORS[1],
 }
 
-semantic_mapping_greys = {
+semantic_mapping_ui = {
     "base": WHITE,
     "mantle": MANTLE,
     "crust": CRUST,
-    "surface0": BRIGHT_GREYS[4],
-    "surface1": BRIGHT_GREYS[3],
-    "surface2": BRIGHT_GREYS[2],
-    "overlay0": BRIGHT_GREYS[1],
-    "subtext0": DARK_GREYS[1],
-    "subtext1": DARK_GREYS[0],
+    "surface0": UI_LIGHT_GREYS[3],
+    "surface1": UI_LIGHT_GREYS[2],
+    "surface2": UI_LIGHT_GREYS[1],
+    "overlay0": UI_LIGHT_GREYS[0],
+    "subtext1": ALMOST_BLACK,
 }
 
-semantic_mapping = semantic_mapping_colors | semantic_mapping_greys
+semantic_mapping = semantic_mapping_text | semantic_mapping_ui
 
 
-semantics_color = {
+semantics_text = {
     "text": "Text",
+    "labels": "Sub-Headlines, Labels",
     "functions": (
         "Methods, Functions, Properties, " "Links, URLs, Tags"
     ),
@@ -136,7 +141,7 @@ semantics_color = {
     "ansi6": "",
 }
 
-semantics_grey = {
+semantics_ui = {
     "base": "Background Pane",
     "mantle": "Secondary Panes",
     "crust": "Secondary Panes",
@@ -144,7 +149,6 @@ semantics_grey = {
     "surface1": "Surface Elements",
     "surface2": "Surface Elements",
     "overlay0": "Overlays",
-    "subtext0": "Sub-Headlines, Labels",
     "subtext1": "Sub-Headlines, Labels",
 }
 
@@ -174,6 +178,6 @@ catppuccin_translation = {
     "surface1": "surface1",
     "surface2": "surface2",
     "overlay0": "overlay0",
-    "subtext0": "subtext0",
+    "subtext0": "labels",
     "subtext1": "subtext1",
 }
