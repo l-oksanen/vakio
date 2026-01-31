@@ -161,7 +161,7 @@ def hexes(hexes, top_hexes=None, labels=None, colored_labels=True):
         ax.axis("off")
 
 
-def palette(palette):
+def palette(palette, show_ansi_name=True, show_rainbow_name=True):
     """
     Display palette as a HTML table.
     """
@@ -174,10 +174,14 @@ def palette(palette):
             desc = "🐱" + desc
         if ix in RAINBOW:
             rix = rainbow_inv[ix]
-            desc = f"🌈{rix} ({rainbow_names[rix]}) " + desc
+            if show_rainbow_name:
+                desc = f"({rainbow_names[rix]}) " + desc
+            desc = f"🌈{rix} " + desc
         if ix in ansi_inv:
             aix = ansi_inv[ix]
-            desc = f"#️⃣{aix} ({ansi_names[aix]}) " + desc
+            if show_ansi_name:
+                desc = f"({ansi_names[aix]}) " + desc
+            desc = f"#️⃣{aix} " + desc
         h = palette[ix]
         r, g, b = to_rgb(h)
         name = hex_to_xkcd_name(h)
