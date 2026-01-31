@@ -106,19 +106,22 @@ def hue_sorted(colors, h_start=0):
     )
 
 
-def dist_perceptual(color1, color2, kL=1, kC=1, kH=0.6):
+def dist_perceptual(color1, color2, wL=0.4):
     """
-    Perceptual distance between two colors in Oklch space.
+    Perceptual distance between two colors.
+
+    Based on the norm defined by `|color|^2 = wL*L^2 + |(a, b)|^2`
+    where `color = (L, a, b)` in the Oklab space, and the Euclidean
+    norm is used for `(a, b)`.
     """
     l1, c1, h1 = color1
     l2, c2, h2 = color2
+    a1, a2 = np.radians(h1), np.radians(h2)
     c1 = c1 / 1000
     c2 = c2 / 1000
-    dL = (l1 - l2) / kL
-    dC = (c1 - c2) / kC
-    dh = np.radians(diff_hue(h1, h2))
-    dH = (2 * np.sqrt(c1 * c2) * np.sin(dh / 2)) / kH
-    return np.sqrt(dL**2 + dC**2 + dH**2)
+    dab2 = c1**2 + c2**2 - 2 * c1 * c2 * np.cos(a1 - a2)
+    dL = l1 - l2
+    return np.sqrt(wL * dL**2 + dab2)
 
 
 def dist_in_ch(color1, color2):
