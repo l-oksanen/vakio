@@ -23,7 +23,7 @@ def create_palette(
     Extra colors are simply appended to the palette.
     """
     if hex_greys is None:
-        hex_greys = create_greys(bright_L)
+        hex_greys = create_greys(dark_L, bright_L)
     if dark_shifts is None:
         dark_shifts = 5 * [0]
         dark_shifts[2] = -0.05
@@ -39,7 +39,8 @@ def create_palette(
 
 
 def create_greys(
-    grey_L,
+    dark_grey_L,
+    bright_grey_L,
     subtle_grey_L=None,
     hex_black="#000000",
     hex_crust="#deddda",
@@ -49,25 +50,25 @@ def create_greys(
     """
     Create grey shades.
 
-    Two dark greys are interpolated between black and grey.
-    Four bright greys are interpolated between subtle grey and crust.
+    One dark grey is interpolated between black and dark grey.
+    Four light greys are interpolated between subtle grey and crust.
 
-    If no subtle_grey_L is provided, it is set to grey_L + 0.1.
+    If no subtle_grey_L is given, it is set to `bright_grey_L + 0.1`.
 
-    The four given shades are appended to the grey shades.
+    The four given shades are appended to the list of greys.
     """
     if subtle_grey_L is None:
-        subtle_grey_L = grey_L + 0.1
-    L_black = srgb_to_oklch(*to_rgb(hex_black))[0]
-    L_crust = srgb_to_oklch(*to_rgb(hex_crust))[0]
+        subtle_grey_L = bright_grey_L + 0.1
+    black_L = srgb_to_oklch(*to_rgb(hex_black))[0]
+    crust_L = srgb_to_oklch(*to_rgb(hex_crust))[0]
 
-    L_dark_grays = list(np.linspace(L_black, grey_L, 4)[1:])
-    L_bright_grays = list(np.linspace(subtle_grey_L, L_crust, 6)[:-1])
+    dark_grays_L = list(np.linspace(black_L, dark_grey_L, 3)[1:])
+    light_grays_L = list(np.linspace(subtle_grey_L, crust_L, 6)[:-1])
     return np.array(
         [hex_black]
         + [
             oklch_to_hex(L, 0, 0)
-            for L in L_dark_grays + L_bright_grays
+            for L in dark_grays_L + [bright_grey_L] + light_grays_L
         ]
         + [hex_crust, hex_mantle, hex_base]
     )
