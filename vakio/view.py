@@ -9,13 +9,14 @@ from matplotlib.colors import XKCD_COLORS, to_rgb
 from .alg import dist_perceptual, srgb_to_oklch
 from .metadata import (
     ANSI,
-    COLORS,
     RAINBOW,
+    TEXT_COLORS,
     ansi_names,
     catppuccin_translation,
     rainbow_names,
-    semantic_mapping_colors,
-    semantics_color,
+    semantic_mapping,
+    semantic_mapping_text,
+    semantics_text,
 )
 
 
@@ -26,17 +27,28 @@ def hex_to_oklch(h):
     return srgb_to_oklch(*to_rgb(h))
 
 
-def hex_to_xkcd_name(h):
+def hex_to_xkcd_name(h, white_threshold=(0.97, 3)):
     """
     Find the name of the closest XKCD color.
+
+    If lightness is greater than `white_threshold[0]`, chroma is less
+    than `white_threshold[1]`, and the closest name is not 'white' use
+    'almost white' instead of the closest name.
     """
-    c = hex_to_oklch(h)
+    color = hex_to_oklch(h)
     ds = {
-        name: dist_perceptual(c, hex_to_oklch(h_))
+        name: dist_perceptual(color, hex_to_oklch(h_))
         for name, h_ in XKCD_COLORS.items()
     }
-    name = min(ds, key=ds.get)
-    return name[5:]
+    name = min(ds, key=ds.get)[5:]
+    l, c, h = color
+    if (
+        l > white_threshold[0]
+        and c < white_threshold[1]
+        and name != "white"
+    ):
+        name = "almost white"
+    return name
 
 
 def mosaic_layout(bottom_keys, top_keys=None, pad_left=True):
@@ -161,6 +173,27 @@ def hexes(hexes, top_hexes=None, labels=None, colored_labels=True):
         ax.axis("off")
 
 
+def indices(
+    palette,
+    ixs,
+    show_xkcd_names=False,
+    colored_labels=False,
+    title=None,
+):
+    sm_inv = {v: k for k, v in semantic_mapping.items()}
+    labels = []
+    for i in ixs:
+        label = sm_inv[i]
+        if show_xkcd_names:
+            label += " (" + hex_to_xkcd_name(palette[i]) + ")"
+        labels.append(label)
+    hexes(palette[ixs], labels=labels, colored_labels=colored_labels)
+    if title is not None:
+        plt.gcf().text(
+            0.13, 1.2, title, ha="left", va="top", fontsize=12
+        )
+
+
 def palette(palette, show_ansi_name=True, show_rainbow_name=True):
     """
     Display palette as a HTML table.
@@ -168,8 +201,8 @@ def palette(palette, show_ansi_name=True, show_rainbow_name=True):
     html = "<table>"
     ansi_inv = {v: i for i, v in enumerate(ANSI)}
     rainbow_inv = {v: i for i, v in enumerate(RAINBOW)}
-    for key, ix in semantic_mapping_colors.items():
-        desc = semantics_color[key]
+    for key, ix in semantic_mapping_text.items():
+        desc = semantics_text[key]
         if key in catppuccin_translation.values():
             desc = "🐱" + desc
         if ix in RAINBOW:
@@ -265,7 +298,7 @@ def closest(hexes, palette):
     background: #f6f5f4;
 '>dist</th></tr>
 """
-    hexes_ = palette[COLORS]
+    hexes_ = palette[TEXT_COLORS]
     for h in hexes:
         dists = [
             dist_perceptual(hex_to_oklch(h), hex_to_oklch(h_))
