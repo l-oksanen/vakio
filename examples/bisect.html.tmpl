@@ -1,0 +1,23 @@
+<pre style='
+    background: #fff;
+    font-family: monospace;
+    white-space: pre;
+'>
+<span style="color: $keywords;">def</span> <span style="color: $functions;">bisect</span><span style="color: $errors;">(</span><span style="color: $params;">a</span><span style="color: $comments;">,</span> <span style="color: $params;">b</span><span style="color: $comments;">,</span> <span style="color: $params;">f</span><span style="color: $comments;">,</span> <span style="color: $params;">tol</span><span style="color: $operators;">=</span><span style="color: $constants;">1</span><span style="color: $errors;">)</span><span style="color: $comments;">:</span>
+<span>    </span><span style="color: $strings;">"""</span>
+<span style="color: $strings;">    Find a root of function f between points a and b.</span>
+
+<span style="color: $strings;">    Uses bisection search, stopping when the interval </span>
+<span style="color: $strings;">    length falls below tol.</span>
+<span>    </span><span style="color: $strings;">"""</span>
+<span>    </span><span style="color: $keywords;">if</span> <span style="color: $params;">a</span> <span style="color: $operators;">&gt;</span> <span style="color: $params;">b</span><span style="color: $comments;">:</span>
+<span>        </span><span style="color: $params;">a</span><span style="color: $comments;">,</span> <span style="color: $params;">b</span> <span style="color: $operators;">=</span> <span style="color: $params;">b</span><span style="color: $comments;">,</span> <span style="color: $params;">a</span>
+<span>    </span><span style="color: $keywords;">while</span> <span style="color: $labels;">np</span><span style="color: $operators;">.</span><span style="color: $functions;">abs</span><span style="color: $errors;">(</span><span style="color: $params;">b</span> <span style="color: $operators;">-</span> <span style="color: $params;">a</span><span style="color: $errors;">)</span> <span style="color: $operators;">&gt;</span> <span style="color: $params;">tol</span><span style="color: $comments;">:</span>
+<span>        </span>c <span style="color: $operators;">=</span> <span style="color: $errors;">(</span><span style="color: $params;">b</span> <span style="color: $operators;">+</span> <span style="color: $params;">a</span><span style="color: $errors;">)</span> <span style="color: $operators;">/</span> <span style="color: $constants;">2</span>
+<span>        </span><span style="color: $keywords;">if</span> <span style="color: $labels;">np</span><span style="color: $operators;">.</span><span style="color: $functions;">sign</span><span style="color: $errors;">(</span><span style="color: $params;">f</span><span style="color: $rainbow1;">(</span>c<span style="color: $rainbow1;">)</span><span style="color: $errors;">)</span> <span style="color: $operators;">==</span> <span style="color: $labels;">np</span><span style="color: $operators;">.</span><span style="color: $functions;">sign</span><span style="color: $errors;">(</span><span style="color: $params;">f</span><span style="color: $rainbow1;">(</span><span style="color: $params;">a</span><span style="color: $rainbow1;">)</span><span style="color: $errors;">)</span><span style="color: $comments;">:</span>
+<span>            </span><span style="color: $params;">a</span> <span style="color: $operators;">=</span> c
+<span>        </span><span style="color: $keywords;">else</span><span style="color: $comments;">:</span>
+<span>            </span><span style="color: $params;">b</span> <span style="color: $operators;">=</span> c
+<span>    </span><span style="color: $keywords;">return</span> <span style="color: $params;">a</span>
+</pre>
+</div>
