@@ -1,4 +1,3 @@
-import html
 import textwrap
 
 import numpy as np
@@ -233,54 +232,11 @@ def palette(palette, show_ansi_name=True, show_rainbow_name=True):
     display(HTML(html + "</table>"))
 
 
-def copyable_preview(text, max_cols=70, max_lines=5, indent=0):
+def print_with_indent(text, spaces=4):
     """
-    Display text as HTML with truncation and “copy full text” button.
-
-    The text is truncated to at most `max_lines` lines, and each line
-    is truncated to at `most max_cols` characters. An optional
-    indentation of `indent` spaces can be applied to each line.
+    Print text, indenting each line by the given number of spaces.
     """
-    text = textwrap.indent(text, indent * " ")
-    lines = text.splitlines()
-    preview_lines = []
-    for i, line in enumerate(lines):
-        if i >= max_lines:
-            preview_lines.append("…")
-            break
-        if len(line) > max_cols:
-            preview_lines.append(html.escape(line[:max_cols]) + "…")
-        else:
-            preview_lines.append(html.escape(line))
-    preview = "<br>".join(preview_lines)
-    escaped = html.escape(text)
-    display(HTML(f"""
-<div style="
-    font-family: monospace;
-    border: 1px solid #ddd;
-    padding: 8px;
-    border-radius: 6px;
-    background: #fafafa;
-    max-width: 100%;
-">
-<div><pre>{preview}</pre></div>
-<button onclick="
-    const ta = document.createElement('textarea');
-    ta.value = `{escaped}`;
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-    this.innerText = 'Copied!';
-    setTimeout(() => this.innerText = 'Copy', 1500);
-" style="
-    margin-top: 6px;
-    padding: 4px 10px;
-">
-Copy
-</button>
-</div>
-    """))
+    print(textwrap.indent(text, spaces * " "))
 
 
 def closest(hexes, palette):
