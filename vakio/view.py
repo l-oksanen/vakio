@@ -222,13 +222,15 @@ def palette(palette, show_ansi_name=True, show_rainbow_name=True):
     background: #fff; 
     font-family: 
     monospace; color: 
-    rgb({255*r}, {255*g}, {255*b}); 
-    text-align: left !important;
+    rgb({255*r}, {255*g}, {255*b});
 '>
 <td>■</td>
-<td>{key}</td>
-<td style='white-space: pre;'>{hex_to_str(h)}</td>
-<td>{desc}</td>
+<td style='text-align: left !important;'>{key}</td>
+<td style='
+    text-align: left !important; 
+    white-space: pre;
+'>{hex_to_str(h)}</td>
+<td style='text-align: left !important;'>{desc}</td>
 </tr>"""
     display(HTML(html + "</table>"))
 
@@ -336,11 +338,11 @@ def _hex_to_html(h, draw_border=False):
     return f"""
 <tr style='
     background: #fff; 
-    text-align: left !important;
     {border_style}
 '>
 <td style='
     font-family: monospace; 
+    text-align: left !important;
     color: rgb({255*r}, {255*g}, {255*b}); 
 '>■ {hex_to_str(h)}</td>
 """
