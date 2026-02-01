@@ -216,16 +216,14 @@ def palette(palette, show_ansi_name=True, show_rainbow_name=True):
                 desc = f"({ansi_names[aix]}) " + desc
             desc = f"#️⃣{aix} " + desc
         h = palette[ix]
-        r, g, b = to_rgb(h)
         html += f"""
 <tr style='
     background: #fff; 
     font-family: 
-    monospace; color: 
-    rgb({255*r}, {255*g}, {255*b});
+    monospace; 
+    color: {h};
 '>
-<td>■</td>
-<td style='text-align: left !important;'>{key}</td>
+<td style='text-align: left !important;'>■&nbsp;{key}</td>
 <td style='
     text-align: left !important; 
     white-space: pre;
@@ -325,13 +323,12 @@ def hex_to_str(h):
 
     String consists of hex value, lightness, chroma and XKCD name.
     """
-    L, c, _ = hex_to_oklch(h)
+    L, chroma, hue = hex_to_oklch(h)
     name = hex_to_xkcd_name(h)
-    return f"{h} {100*L:3.0f} {c:3.0f} {name}"
+    return f"{h} {100*L:3.0f} {chroma:3.0f} {hue:3.0f}  {name}"
 
 
 def _hex_to_html(h, draw_border=False):
-    r, g, b = to_rgb(h)
     border_style = (
         "border-bottom: 2px solid #deddda;" if draw_border else ""
     )
@@ -343,7 +340,8 @@ def _hex_to_html(h, draw_border=False):
 <td style='
     font-family: monospace; 
     text-align: left !important;
-    color: rgb({255*r}, {255*g}, {255*b}); 
+    white-space: pre;
+    color: {h};
 '>■ {hex_to_str(h)}</td>
 """
 
