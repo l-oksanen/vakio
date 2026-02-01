@@ -223,7 +223,7 @@ def palette(palette, show_ansi_name=True, show_rainbow_name=True):
     font-family: 
     monospace; color: 
     rgb({255*r}, {255*g}, {255*b}); 
-    text-align: left;
+    text-align: left !important;
 '>
 <td>■</td>
 <td>{key}</td>
@@ -292,9 +292,9 @@ def closest(hexes, palette):
 <tr style='
     border-bottom: 2px solid #deddda;
 '><th style='
-    text-align: center;
+    text-align: center !important;
 '>color and its closest match</th><th style='
-    text-align: center;
+    text-align: center !important;
     background: #f6f5f4;
 '>dist</th></tr>
 """
@@ -308,7 +308,7 @@ def closest(hexes, palette):
         html += _hex_to_html(h)
         html += f"""
 <td rowspan='2' style='
-    text-align: center;
+    text-align: center !important;
     background: #f6f5f4;
 '>{d:.3f}</td></tr>"""
         html += _hex_to_html(hexes_[i], draw_border=True)
@@ -336,7 +336,7 @@ def _hex_to_html(h, draw_border=False):
     return f"""
 <tr style='
     background: #fff; 
-    text-align: left;
+    text-align: left !important;
     {border_style}
 '>
 <td style='
