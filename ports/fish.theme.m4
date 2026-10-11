@@ -1,0 +1,35 @@
+m4_define(`nohash', `m4_patsubst(`$1', `#')')m4_dnl
+# name: 'vakio'
+# url: 'https://github.com/l-oksanen/vakio'
+# preferred_background: nohash(latte_base)
+
+fish_color_prompt_bg nohash(latte_crust)
+fish_color_prompt_dim nohash(latte_surface2)
+
+
+fish_color_normal nohash(latte_text)
+fish_color_command nohash(latte_blue)
+fish_color_param nohash(latte_flamingo)
+fish_color_keyword nohash(latte_red)
+fish_color_quote nohash(latte_green)
+fish_color_redirection nohash(latte_pink)
+fish_color_end nohash(latte_peach)
+fish_color_comment nohash(latte_overlay0)
+fish_color_error nohash(latte_red)
+fish_color_gray nohash(latte_overlay0)
+fish_color_selection --background=nohash(latte_surface0)
+fish_color_search_match --background=nohash(latte_surface0)
+fish_color_option nohash(latte_green)
+fish_color_operator nohash(latte_pink)
+fish_color_escape nohash(latte_maroon)
+fish_color_autosuggestion nohash(latte_surface1)
+fish_color_cancel nohash(latte_red)
+fish_color_cwd nohash(latte_yellow)
+fish_color_user nohash(latte_teal)
+fish_color_host nohash(latte_blue)
+fish_color_host_remote nohash(latte_green)
+fish_color_status nohash(latte_red)
+fish_pager_color_progress nohash(latte_overlay0)
+fish_pager_color_prefix nohash(latte_pink)
+fish_pager_color_completion nohash(latte_text)
+fish_pager_color_description nohash(latte_overlay0)

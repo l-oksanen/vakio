@@ -1,15 +1,5 @@
 m4_divert(-1)
-# The default palette can be injected into this template by using 
-# the following command in fish shell: 
-#
-# m4 -P (vakio | psub) m4/translate_seq.m4 examples/kitty.conf.m4
-#
-# The process substitution (vakio | psub) must be adjusted for other
-# shells. Alternatively, redirect first to a file 
-#
-# vakio > colormap.m4
-#
-# and use colormap.m4 in place of the process substitution.
+# Built into vakio.conf by ports/build.sh.
 #
 # For instructions on how to use the theme in kitty, see 
 #

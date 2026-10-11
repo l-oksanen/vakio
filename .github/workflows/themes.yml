@@ -1,0 +1,31 @@
+name: themes
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  themes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install .
+      - run: command -v m4 || sudo apt-get install -y m4
+      - run: ports/build.sh out
+      - name: Publish the themes in the release with the fixed tag themes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git tag -f themes
+          git push -f origin themes
+          gh release view themes >/dev/null 2>&1 \
+            || gh release create themes --title themes \
+              --notes "Themes built from the vakio palette by ports/build.sh"
+          gh release upload themes out/* --clobber
