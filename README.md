@@ -30,6 +30,9 @@ the themes with
 ports/build.sh OUTDIR
 ```
 
-On each push to `main`, a GitHub workflow builds the themes and
-publishes them in the release with the tag `themes`, for example
-https://github.com/l-oksanen/vakio/releases/download/themes/vakio.conf
+which writes a directory for each program: `kitty/vakio.conf`,
+`micro/vakio.micro`, `fish/vakio.theme`, `fzf/vakio.fish` and
+`bat/vakio.tmTheme`. On each push to `main`, a GitHub workflow builds
+the themes and publishes them as `themes.tar.gz` in the release with
+the tag `themes`:
+https://github.com/l-oksanen/vakio/releases/download/themes/themes.tar.gz

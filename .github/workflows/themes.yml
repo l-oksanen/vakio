@@ -19,7 +19,8 @@ jobs:
       - run: pip install .
       - run: command -v m4 || sudo apt-get install -y m4
       - run: ports/build.sh out
-      - name: Publish the themes in the release with the fixed tag themes
+      - run: tar -czf themes.tar.gz -C out .
+      - name: Publish themes.tar.gz in the release with the fixed tag themes
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -27,5 +28,7 @@ jobs:
           git push -f origin themes
           gh release view themes >/dev/null 2>&1 \
             || gh release create themes --title themes \
-              --notes "Themes built from the vakio palette by ports/build.sh"
-          gh release upload themes out/* --clobber
+              --notes "Themes built from the vakio palette by ports/build.sh, a directory for each program"
+          gh release view themes --json assets --jq '.assets[].name' \
+            | xargs -r -n 1 gh release delete-asset themes -y
+          gh release upload themes themes.tar.gz

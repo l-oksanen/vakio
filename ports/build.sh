@@ -1,5 +1,6 @@
 #!/bin/bash
-# Build the themes of the ports into OUTDIR from the vakio palette
+# Build the themes of the ports from the vakio palette, in a directory
+# of OUTDIR for each program
 set -euo pipefail
 
 if [ $# -ne 1 ]; then
@@ -19,12 +20,14 @@ trap 'rm -f "$macros"' EXIT
     vakio --keys catppuccin --to m4 --m4prefix latte_
 } >"$macros"
 
+# build TEMPLATE PROGRAM FILE builds OUTDIR/PROGRAM/FILE
 build() {
+    mkdir -p "$outdir/$2"
     m4 -P "$macros" "$portsdir/../m4/translate_seq.m4" "$portsdir/$1" \
-        >"$outdir/$2"
+        >"$outdir/$2/$3"
 }
-build kitty.conf.m4 vakio.conf
-build micro.m4 vakio.micro
-build fish.theme.m4 vakio.theme
-build fzf.fish.m4 vakio_fzf_colors.fish
-build bat.tmTheme.m4 vakio.tmTheme
+build kitty.conf.m4 kitty vakio.conf
+build micro.m4 micro vakio.micro
+build fish.theme.m4 fish vakio.theme
+build fzf.fish.m4 fzf vakio.fish
+build bat.tmTheme.m4 bat vakio.tmTheme
