@@ -9,7 +9,7 @@ fish_color_prompt_dim nohash(latte_surface2)
 
 fish_color_normal nohash(latte_text)
 fish_color_command nohash(latte_blue)
-fish_color_param nohash(latte_flamingo)
+fish_color_param nohash(latte_text)
 fish_color_keyword nohash(latte_red)
 fish_color_quote nohash(latte_green)
 fish_color_redirection nohash(latte_pink)
